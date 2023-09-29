@@ -1,0 +1,61 @@
+import React from "react";
+import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
+const thousandify = require("thousandify");
+import { useNavigation } from "@react-navigation/native";
+
+const Book = ({ data }) => {
+  const navigation = useNavigation();
+
+  return (
+    <TouchableOpacity
+      onPress={() => navigation.navigate("Detail", { id: data.id })}
+      style={{
+        marginLeft: 15,
+        marginVertical: 15,
+        width: 200
+      }}
+    >
+      <Image
+        style={{ width: 200, height: 250, marginRight: 15 }}
+        source={{
+          uri: "https://m.media-amazon.com/images/I" + data.photo
+        }}
+      />
+      <Text
+        style={{
+          marginLeft: 10,
+          fontSize: 12,
+          marginTop: 10
+        }}
+      >
+        {data.name}
+      </Text>
+      <Text
+        style={{ marginLeft: 10, top: 5, fontSize: 10, fontWeight: "bold" }}
+      >
+        {data.author}
+      </Text>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          paddingHorizontal: 10,
+          marginTop: 10,
+          alignItems: "center"
+        }}
+      >
+        <Text style={{ marginRight: 10, fontSize: 18, fontWeight: "bold" }}>
+          {thousandify(data.price)}$
+        </Text>
+
+        <Text style={{ marginRight: 10, fontSize: 12, color: "gray" }}>
+          {data.balance > 0 ? `${data.balance} pcs` : null}
+        </Text>
+      </View>
+    </TouchableOpacity>
+  );
+};
+
+export default Book;
+
+const styles = StyleSheet.create({});
