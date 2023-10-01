@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { View, Text, Image, StyleSheet, Alert } from "react-native";
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import MyButton from "../components/MyButton";
 import MyInput from "../components/MyInput";
 
@@ -35,15 +36,20 @@ export default function ({ route, navigation }) {
     })
       .then(result => {
         console.log(result.data);
-        navigation.navigate('Home');
-      }
-      )
-      .catch(error => {
+        AsyncStorage.setItem('user_token', result.data.token)
+          .then(result => {
+            console.log('token has been stored as successfully');
+            navigation.navigate('Home');
+          })
+          .catch(err => {
+            console.log("token could not been stored..." + err.message);
+            setError("token could not been stored..." + err.message);
+          });
+      }).catch(error => {
         console.log(error.response);
         setError(error.response.data.error.message);
-      })
+      });
   };
-
   return (
     <View>
       <Image
@@ -111,3 +117,4 @@ const css = StyleSheet.create({
     marginVertical: 5
   }
 });
+
