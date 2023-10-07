@@ -1,15 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { View, Text, Image, StyleSheet, Alert } from "react-native";
-import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import MyButton from "../components/MyButton";
 import MyInput from "../components/MyInput";
+import UserContext from "../context/UserContext";
 
-export default function ({ route, navigation }) {
+export default ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [token, setToken] = useState("");
-  const [error, setError] = useState(null)
+  const [error, setError] = useState(null);
+  const state = useContext(UserContext);
 
   const loginHandler = () => {
     setError(null);
@@ -21,29 +20,9 @@ export default function ({ route, navigation }) {
       Alert.alert('password field is empty, please enter password');
       return;
     }
-
-    axios.post(
-      `http://192.168.1.3:8000/api/v1/users/login`, {
-      "email": email,
-      "password": password
-    })
-      .then(result => {
-        console.log(result.data);
-        AsyncStorage.setItem('user_token', result.data.token)
-          .then(result => {
-            console.log('Login has been done. Token has been stored as successfully');
-            navigation.navigate('Home');
-          })
-          .catch(err => {
-            console.log("token could not been stored..." + err.message);
-            setError("token could not been stored..." + err.message);
-          });
-      }).catch(error => {
-        console.log(error.response);
-        setError(error.response.data.error.message);
-      });
+    state.login(email, password, navigation);
   };
-  AsyncStorage.getItem('user_token').then(result => setToken(result)).catch(error => console.log(error.message));
+
 
   return (
     <View>
@@ -61,18 +40,7 @@ export default function ({ route, navigation }) {
       >
         Login
       </Text>
-      <Text
-        style={{
-          textAlign: "center",
-          fontSize: 15,
-          marginTop: 10,
-          marginHorizontal: 30,
-          color: "green"
-        }}
-      >
-        ==========Token========{token}
-        =======================User has got login successfully
-      </Text>
+
       {error &&
         <Text style={{ margin: 30, textAlign: 'center', color: 'red' }}>
           {error}

@@ -1,5 +1,5 @@
 import 'react-native-gesture-handler';
-import React from "react";
+import React, { useContext } from "react";
 import { Alert, View, Button } from 'react-native';
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -9,6 +9,8 @@ import BookDetailScreen from './src/screens/BookDetailScreen';
 import { Feather } from '@expo/vector-icons';
 import LoginScreen from './src/screens/LoginScreen';
 import SignupScreen from './src/screens/SignupScreen';
+import { UserState } from './src/context/UserContext';
+import UserContext from './src/context/UserContext';
 
 
 const Stack = createStackNavigator();
@@ -17,69 +19,40 @@ const Drawer = createDrawerNavigator();
 
 const StackNavigator = () => (
   <Stack.Navigator
-    // screenOptions={{
-    //   headerStyle: { backgroundColor: "#636e72" },
-    //   headerTintColor: "white",
-    //   headerTitleStyle: { fontSize: 22 }
-    // }}
     initialRouteName="Home"
   >
     <Stack.Screen
       name="Home"
       component={HomeScreen}
-    // options={({ navigation }) => ({
-    //   // title: "New World Bookstore",
-    //   headerRight: () => <Feather style={{ marginHorizontal: 10 }} name="menu" size={30} color="#fdcb6e" onPress={() => navigation.toggleDrawer()} />
-    // })}
     />
-
     <Stack.Screen
       name="Detail"
       component={BookDetailScreen}
-    // options={({ navigation }) => ({
-    //   // title: "New World Bookstore",
-    //   headerBackTitleVisible: true,
-    //   headerBackTitle: "Back",
-    //   headerTruncatedBackTitle: "",
-    //   headerLeft: () =>
-    //     <View style={{ marginHorizontal: 5 }}>
-    //       {/* <Button title="Back"
-    //         color='#fdcb6e'
-
-    //         onPress={() => {
-    //           Alert.alert("Attention", "Are you sure to back?", [
-    //             {
-    //               text: "Cancel",
-    //               onPress: () => console.log("болих")
-    //             },
-    //             {
-    //               text: "Back",
-    //               onPress: () => navigation.goBack()
-    //             }
-    //           ]);
-    //         }}
-    //       /> */}
-    //     </View>
-    // })
-    // }
     />
   </Stack.Navigator>
 );
 
-
-
 const DrawerNavigator = () => {
+  const state = useContext(UserContext);
+  const drawerScreens = state
+    ? [{ name: 'New world Bookstore', component: StackNavigator }, { name: 'Logout', component: SignupScreen }]
+    : [
+      { name: 'New world Bookstore', component: StackNavigator },
+      { name: 'Login', component: LoginScreen },
+      { name: 'Signup', component: SignupScreen }
+    ];
+
   return (
-    <NavigationContainer>
-      <Drawer.Navigator initialRouteName='New world Bookstore'>
-        <Drawer.Screen name="New world Bookstore" component={StackNavigator} />
-        {/* <Drawer.Screen name="New world bookstore" component={HomeScreen} /> */}
-        <Drawer.Screen name="Login" component={LoginScreen} />
-        <Drawer.Screen name="Signup" component={SignupScreen} />
-      </Drawer.Navigator>
-    </NavigationContainer>
-  )
+    <UserState>
+      <NavigationContainer>
+        <Drawer.Navigator initialRouteName='New world Bookstore'>
+          {drawerScreens.map(({ name, component }) => (
+            <Drawer.Screen name={name} component={component} key={name} />
+          ))}
+        </Drawer.Navigator>
+      </NavigationContainer>
+    </UserState >
+
+  );
 };
-
-
 export default DrawerNavigator;
