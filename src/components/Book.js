@@ -2,9 +2,11 @@ import React from "react";
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 const thousandify = require("thousandify");
 import { useNavigation } from "@react-navigation/native";
+import Detail from '../screens/BookDetailScreen';
 
 const Book = ({ data }) => {
   const navigation = useNavigation();
+  console.log(data.id);
 
   return (
     <TouchableOpacity
@@ -13,7 +15,8 @@ const Book = ({ data }) => {
         marginLeft: 15,
         marginVertical: 15,
         width: 200
-      }}
+      }
+      }
     >
       <Image
         style={{ width: 200, height: 250, marginRight: 15 }}
@@ -52,7 +55,7 @@ const Book = ({ data }) => {
           {data.balance > 0 ? `${data.balance} pcs` : null}
         </Text>
       </View>
-    </TouchableOpacity>
+    </TouchableOpacity >
   );
 };
 

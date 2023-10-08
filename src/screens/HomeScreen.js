@@ -7,6 +7,7 @@ import {
   Alert,
   Button
 } from "react-native";
+
 import {
   HeaderButtons,
   Item,
@@ -15,6 +16,7 @@ import {
   Divider
 } from 'react-navigation-header-buttons';
 import { Feather } from '@expo/vector-icons';
+
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import Search from "../components/Search";
 import useCategory from "../hooks/useCategory";
@@ -29,32 +31,14 @@ const HomeScreen = ({ navigation }) => {
 
   // useLayoutEffect(() => {
   //   navigation.setOptions({
-  //     headerRight: () => <Feather style={{ marginHorizontal: 10 }} name="menu" size={30} color="#fdcb6e" onPress={() => navigation.toggleDrawer()} />
-  //   })
-  // }, [navigation]);
-  // useLayoutEffect(() => {
-  //   navigation.setOptions({
   //     headerRight: () => (
   //       <HeaderButtons HeaderButtonComponent={MyHeaderButton}>
-  //         <OverflowMenu
-  //           OverflowIcon={() => (
-  //             <MaterialIcons name="more-horiz" size={30} color='#fdcb6e' />
-  //           )}
-  //         >
-  //           <HiddenItem title="hidden1" onPress={() => alert('hidden1')} />
-  //           <HiddenItem title="hidden2" onPress={() => alert('hidden2')} />
-  //           <HiddenItem title="hidden3" onPress={() => alert('hidden3')} />
-  //           <Divider />
-
-  //         </OverflowMenu>
-  //       </HeaderButtons >
-  // <View style={{ marginHorizontal: 5 }}>
-  //   <Button
-  //     title="Menu"
-  //     color='#fdcb6e'
-  //     onPress={() => Alert.alert("Your searched text: " + localSearchText)}
-  //   />
-  // </View>
+  //         <Item
+  //           title="Цэс"
+  //           iconName="ios-menu"
+  //           onPress={() => navigation.toggleDrawer()}
+  //         />
+  //       </HeaderButtons>
   //     )
   //   });
   // }, [navigation, localSearchText]);

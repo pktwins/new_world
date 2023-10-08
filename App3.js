@@ -6,13 +6,13 @@ import MyDrawerNavigation from "./src/navigation/MyDrawerNavigator";
 import { UserState } from "./src/context/UserContext";
 
 function App() {
-  return (
-    <NavigationContainer>
-      <UserState>
-        <MyDrawerNavigation />
-      </UserState>
-    </NavigationContainer>
-  );
+    return (
+        <NavigationContainer>
+            <UserState>
+                <MyDrawerNavigation />
+            </UserState>
+        </NavigationContainer>
+    );
 }
 
 export default App;

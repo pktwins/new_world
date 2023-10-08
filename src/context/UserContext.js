@@ -1,15 +1,12 @@
-import React, { useState } from 'react';
+import React, { createContext, useState } from 'react';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Home from '../screens/HomeScreen';
 
-// export default React.createContext();
+const UserContext = createContext();
 
-const UserContext = React.createContext();
-
-export const UserState = (props) => {
+export const UserState = ({ children }) => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [token, setToken] = useState("");
+    const [token, setToken] = useState(null);
     const [userName, setUserName] = useState(null);
     const [email, setEmail] = useState(null);
     const [userRole, setUserRole] = useState(null);
@@ -21,7 +18,7 @@ export const UserState = (props) => {
             "password": password
         })
             .then(result => {
-                console.log(result.data);
+                // console.log(result.data);
                 setEmail(email);
                 setToken(result.data.token);
                 setUserName(result.data.name);
@@ -46,7 +43,7 @@ export const UserState = (props) => {
     }
     return (
         <UserContext.Provider value={{ isLoggedIn, setIsLoggedIn, token, setToken, login, userName, setUserName, email, setEmail, userRole, setUserRole }}>
-            {props.children}
+            {children}
             {/* <childrenComponent/> */}
         </UserContext.Provider>
     )

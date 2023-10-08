@@ -1,14 +1,12 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import {
-    HeaderButton
-} from 'react-navigation-header-buttons';
+import { StyleSheet } from 'react-native';
+import { Ionicons } from "@expo/vector-icons";
+import { HeaderButton } from 'react-navigation-header-buttons';
 
-const MyHeaderButton = (props) => {
+const MyHeaderButton = props => {
     return (
 
-        <HeaderButton IconComponent={MaterialIcons} iconSize={25} color='#fdcb6e' {...props} />
+        <HeaderButton {...props} IconComponent={Ionicons} iconSize={25} color='#fdcb6e' />
 
     );
 }

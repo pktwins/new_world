@@ -2,13 +2,14 @@ import React, { useState, useContext } from "react";
 import { View, Text, Image, StyleSheet, Alert } from "react-native";
 import MyButton from "../components/MyButton";
 import MyInput from "../components/MyInput";
-import UserContext from "../context/UserContext";
+import UserContext, { UserState } from "../context/UserContext";
 
 export default ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const state = useContext(UserContext);
+  console.log("======" + state.isLoggedIn + "=======")
 
   const loginHandler = () => {
     setError(null);

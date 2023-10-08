@@ -32,25 +32,31 @@ const StackNavigator = () => (
     </Stack.Navigator>
 );
 
-export default () => {
-    const state = useContext(UserContext);
-    console.log("=====" + state);
-    return (
-        <UserState>
+const DrawerNavigator = () => {
+    try {
+        const state = useContext(UserContext);
+        return (
             <NavigationContainer>
-                <Drawer.Navigator initialRouteName='New world Bookstore'>
-                    <Drawer.Screen name="New world Bookstore" component={StackNavigator} />
-                    {/* <Drawer.Screen name="New world bookstore" component={HomeScreen} /> */}
-                    {state.isLoggedIn ? (<Drawer.Screen name="Logout" component={SignupScreen} />)
-                        : (
+                <UserState>
+                    <Drawer.Navigator initialRouteName={state.isLoggedIn ? 'Home' : 'Login'}>
+                        <Drawer.Screen name="Home" component={StackNavigator} />
+                        {state.isLoggedIn ? (
+                            <Drawer.Screen name="Logout" component={LoginScreen} />
+                        ) : (
                             <>
                                 <Drawer.Screen name="Login" component={LoginScreen} />
                                 <Drawer.Screen name="Signup" component={SignupScreen} />
                             </>
-                        )};
-
-                </Drawer.Navigator>
+                        )}
+                    </Drawer.Navigator>
+                </UserState>
             </NavigationContainer>
-        </UserState>
-    );
+
+        );
+    } catch (error) {
+        console.error("Error occurred: ", error);
+    }
 };
+
+export default DrawerNavigator;
+
