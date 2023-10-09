@@ -1,16 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { View, Text, Image, StyleSheet, Alert } from "react-native";
-import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import MyButton from "../components/MyButton";
 import MyInput from "../components/MyInput";
+import UserContext from '../context/UserContext';
 
-export default function ({ route, navigation }) {
+export default function ({ navigation }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password1, setPassword1] = useState("");
   const [password2, setPassword2] = useState("");
   const [error, setError] = useState(null);
+
+  const state = useContext(UserContext);
+
 
   const signupHandler = () => {
     setError(null);
@@ -27,28 +29,7 @@ export default function ({ route, navigation }) {
       return;
     }
 
-    axios.post(
-      `http://192.168.1.3:8000/api/v1/users/register`, {
-      "name": name,
-      "email": email,
-      "password": password1,
-      "role": "user"
-    })
-      .then(result => {
-        console.log(result.data);
-        AsyncStorage.setItem('user_token', result.data.token)
-          .then(result => {
-            console.log('token has been stored as successfully');
-            navigation.navigate('Home');
-          })
-          .catch(err => {
-            console.log("token could not been stored..." + err.message);
-            setError("token could not been stored..." + err.message);
-          });
-      }).catch(error => {
-        console.log(error.response);
-        setError(error.response.data.error.message);
-      });
+    state.signUp(name, email, password1)
   };
   return (
     <View>

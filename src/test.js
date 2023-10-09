@@ -1,14 +1,14 @@
-import React, { createContext, useState } from 'react';
-import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { useState } from "react";
+import AsyncStorage from "@react-native-community/async-storage";
+import axios from "axios";
 
-const UserContext = createContext();
+const UserContext = React.createContext();
 
-export const UserState = ({ children }) => {
+export const UserStore = props => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [token, setToken] = useState(null);
-    const [userName, setUserName] = useState(null);
     const [email, setEmail] = useState(null);
+    const [userName, setUserName] = useState(null);
     const [userRole, setUserRole] = useState(null);
 
     const login = (email, password) => {
@@ -27,17 +27,9 @@ export const UserState = ({ children }) => {
                 );
             })
             .catch(err => {
-                loginFailed(err.message)
+                loginFailed(err.message);
             });
     };
-
-    const logout = (userName, userRole, email, token, isLoggedIn) => {
-        setEmail(null);
-        setIsLoggedIn(false);
-        setToken(null);
-        setUserName(null);
-        setUserRole(null);
-    }
 
     const signUp = (name, email, password) => {
         axios
@@ -49,15 +41,11 @@ export const UserState = ({ children }) => {
             })
             .then(result => {
                 console.log(result.data);
-                loginUserSuccessful(
-                    result.data.token,
-                    email,
-                    name,
-                    "admin"
+                loginUserSuccessful(result.data.token, email, name, "admin"
                 );
             })
             .catch(err => {
-                loginFailed(err.message)
+                loginFailed(err.message);
             });
     };
 
@@ -65,7 +53,6 @@ export const UserState = ({ children }) => {
         console.log(error);
         setIsLoggedIn(false);
         setEmail(null);
-        setToken(null);
         setUserName(null);
         setUserRole(null);
     };
@@ -76,13 +63,13 @@ export const UserState = ({ children }) => {
         setUserName(userName);
         setUserRole(userRole);
 
-        AsyncStorage.setItem('user_token', token)
+        AsyncStorage.setItem("user_token", token)
             .then(result => {
-                console.log('Login has been done!!!. Token has been stored as successfully');
+                console.log("Бүртгэл амжилттай боллоо. токенийг хадгаллаа..");
                 setIsLoggedIn(true);
             })
             .catch(err => {
-                console.log("token could not been stored..." + err.message);
+                console.log("Токен хадгалж чадсангүй. Шалтгаан :" + err.message);
             });
     };
 
@@ -94,17 +81,13 @@ export const UserState = ({ children }) => {
                 token,
                 setToken,
                 login,
-                userName,
-                setUserName,
-                email,
-                setEmail,
                 userRole,
-                setUserRole,
-                signUp,
-                logout
+                userName,
+                email,
+                signUp
             }}
         >
-            {children}
+            {props.children}
         </UserContext.Provider>
     );
 };

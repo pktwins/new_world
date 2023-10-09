@@ -13,13 +13,13 @@ export default () => {
 
   return (
     <Drawer.Navigator initialRouteName="Book store">
-      <Drawer.Screen name="BookStore" component={MyStackNavigator} />
+      <Drawer.Screen name="Book Store" component={MyStackNavigator} />
       {state.isLoggedIn ? (
         <>
           {state.userRole === "admin" && (
             <Drawer.Screen name="Add new book" component={MyStackNavigator} />
           )}
-          <Drawer.Screen name="Logout" component={HomeScreen} />
+          <Drawer.Screen name="Logout" component={HomeScreen} listeners={() => { state.logout() }} />
         </>
       ) : (
         <>

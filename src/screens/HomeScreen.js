@@ -1,4 +1,4 @@
-import React, { useState, useLayoutEffect } from "react";
+import React, { useState, useLayoutEffect, useContext } from "react";
 import {
   StyleSheet,
   Text,
@@ -23,25 +23,30 @@ import useCategory from "../hooks/useCategory";
 import CategoryBookList from "../components/CategoryBookList";
 import Spinner from "../components/Spinner";
 import MyHeaderButton from '../components/MyHeaderButton';
+import name from '../context/UserContext';
+import UserContext from "../context/UserContext";
 
 const HomeScreen = ({ navigation }) => {
   const [localSearchText, setLocalSearchText] = useState("");
   const [serverSearchText, setServerSearchText] = useState("");
   const [categories, errorMessage, loading] = useCategory();
 
-  // useLayoutEffect(() => {
-  //   navigation.setOptions({
-  //     headerRight: () => (
-  //       <HeaderButtons HeaderButtonComponent={MyHeaderButton}>
-  //         <Item
-  //           title="Цэс"
-  //           iconName="ios-menu"
-  //           onPress={() => navigation.toggleDrawer()}
-  //         />
-  //       </HeaderButtons>
-  //     )
-  //   });
-  // }, [navigation, localSearchText]);
+  const state = useContext(UserContext);
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      // headerRight: () => (
+      //   <HeaderButtons HeaderButtonComponent={MyHeaderButton}>
+      //     <Item
+      //       title="Цэс"
+      //       iconName="ios-menu"
+      //       onPress={() => navigation.toggleDrawer()}
+      //     />
+      //   </HeaderButtons>
+      // )
+      title: state.userName ? "Welcome " + state.userName : "New world bookstore"
+    });
+  }, [navigation, localSearchText, state.userName]);
 
   const searchBookFromServer = () => {
     console.log(`Сэрвэрээс ${localSearchText} утгаар хайж эхэллээ...`);
