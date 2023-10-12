@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-export default (categoryId, searchText) => {
+export default (categoryId, searchText, refreshCategories, setRefreshCategories) => {
   const [books, setBooks] = useState([]);
   const [errorMessage, setErrorMessage] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -19,10 +19,6 @@ export default (categoryId, searchText) => {
       search = `&search=${searchText}`;
     }
 
-    console.log(
-      `http://192.168.1.3:8000/api/v1/categories/${categoryId}/books?limit=${limit}${search}`
-    );
-
     setLoading(true);
 
     axios
@@ -34,6 +30,7 @@ export default (categoryId, searchText) => {
         setBooks(result.data.data);
         setErrorMessage(null);
         setLoading(false);
+        setRefreshCategories(false);
       })
       .catch(err => {
         let message = err.message;
@@ -45,7 +42,7 @@ export default (categoryId, searchText) => {
         setErrorMessage(message);
         setLoading(false);
       });
-  }, [categoryId, searchText]);
+  }, [categoryId, searchText, refreshCategories]);
 
   return [books, errorMessage, searchBook, loading];
 };

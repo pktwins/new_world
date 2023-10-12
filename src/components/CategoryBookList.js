@@ -15,11 +15,15 @@ const CategoryBookList = ({
   data,
   style,
   searchLocalValue,
-  searchServerValue
+  searchServerValue,
+  refreshCategories,
+  setRefreshCategories
 }) => {
   const [books, errorMessage, searchBook, loading] = useBooks(
     data._id,
-    searchServerValue
+    searchServerValue,
+    refreshCategories,
+    setRefreshCategories
   );
 
   const filteredBooks = books.filter(el =>

@@ -12,16 +12,20 @@ export default (id) => {
       );
       setBook(result.data.data);
       setError(null);
-      // console.log(result.data.data);
     } catch (err) {
-      console.log(err.message);
       setError(err.message);
     }
+  };
+
+  const deleteBook = (id) => {
+    return axios.delete(
+      `http://192.168.1.3:8000/api/v1/books/${id}`
+    );
   };
 
   useEffect(() => {
     loadBook();
   }, []);
 
-  return [book, error];
+  return [book, error, deleteBook];
 };

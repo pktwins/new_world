@@ -1,14 +1,34 @@
-// import { useHeaderHeight } from '@react-navigation/stack';
-import { Feather } from '@expo/vector-icons';
-import { StyleSheet, Text, View, Button, Image, Alert } from 'react-native';
-import React, { useState, useEffect, useLayoutEffect, useContext } from "react";
+import { StyleSheet, Text, View, ScrollView, Button, Image, Alert } from 'react-native';
+import React, { useContext } from "react";
 import useBook from "../hooks/useBook";
 import UserContext from "../context/UserContext";
 
 const BookDetailScreen = (props) => {
   const { id } = props.route.params;
-  const [book, error] = useBook(id);
+  const [book, error, deleteBook] = useBook(id);
   const userState = useContext(UserContext);
+
+  const removeBook = () => {
+    Alert.alert(
+      "Attention",
+      "Are you sure to delete this book information?",
+      [{
+        text: "Cancel",
+        onPress: () => { }
+      },
+      {
+        text: "Delete",
+        onPress: () => {
+          deleteBook(book._id)
+            .then(result => {
+              console.log("Book is removed as successfully.", result.data.data);
+              props.navigation.navigate("BookStore", { deletedBook: result.data.data })
+            })
+            .catch(err => Alert.alert("Book is not removed from dataBase. ", err.message));
+        }
+      }
+      ]);
+  }
 
   if (error) {
     return (
@@ -19,25 +39,25 @@ const BookDetailScreen = (props) => {
     return null;
   }
   return (
-    <View style={{ padding: 20 }}>
+    <ScrollView showsVerticalScrollIndicator={false} style={{ padding: 20 }}>
       <Image
-        style={{ width: 300, height: 400, alignSelf: "center" }}
+        style={{ width: 350, height: 530, alignSelf: "center", marginTop: 2 }}
         source={{ uri: "https://m.media-amazon.com/images/I" + book.photo }}
       />
       <Text style={{ fontSize: 18, fontWeight: "bold", marginHorizontal: 60, top: 10 }}>
         {book.name}
       </Text>
-      <Text style={{ textAlign: 'center', marginHorizontal: 40, marginTop: 10, color: 'red', fontSize: 20 }}>
-        {"User logged in? - " + userState.isLoggedIn}
-      </Text>
-      <Text style={{ marginHorizontal: 60 }}>{book.content}</Text>
-      <View style={{ marginHorizontal: 100, marginTop: 35 }}>
-        <Button title="Context tester"
-          color='#00a8ff'
-          onPress={() => userState.setIsLoggedIn(!userState.isLoggedIn)}
-        />
+      <Text style={{ marginHorizontal: 50, marginTop: 15 }}>{book.content}</Text>
+      <View style={{ marginHorizontal: 100, marginTop: 10 }}>
+        {userState.userRole === 'admin' &&
+          < Button title="Delete book"
+            color='#00a8ff'
+            onPress={removeBook}
+          />
+        }
+
       </View>
-      <View style={{ marginHorizontal: 150 }}>
+      <View style={{ marginHorizontal: 150, marginBottom: 90, marginTop: 10 }}>
         <Button title="Back"
           color='#00a8ff'
           onPress={() => {
@@ -54,7 +74,7 @@ const BookDetailScreen = (props) => {
           }}
         />
       </View>
-    </View >
+    </ScrollView >
   );
 };
 

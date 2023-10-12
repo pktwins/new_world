@@ -5,11 +5,16 @@ import SignupScreen from "../screens/SignupScreen";
 import LoginScreen from "../screens/LoginScreen";
 import UserContext from "../context/UserContext";
 import HomeScreen from "../screens/HomeScreen";
+import SplashScreen from '../screens/SplashScreen';
 
 const Drawer = createDrawerNavigator();
 
 export default () => {
   const state = useContext(UserContext);
+
+  if (state.isLoading === true) {
+    return <SplashScreen />
+  }
 
   return (
     <Drawer.Navigator initialRouteName="Book store">

@@ -23,14 +23,20 @@ import useCategory from "../hooks/useCategory";
 import CategoryBookList from "../components/CategoryBookList";
 import Spinner from "../components/Spinner";
 import MyHeaderButton from '../components/MyHeaderButton';
-import name from '../context/UserContext';
 import UserContext from "../context/UserContext";
 
-const HomeScreen = ({ navigation }) => {
+const HomeScreen = ({ navigation, route }) => {
   const [localSearchText, setLocalSearchText] = useState("");
   const [serverSearchText, setServerSearchText] = useState("");
   const [categories, errorMessage, loading] = useCategory();
+  const [refresh, setRefresh] = useState(false);
 
+
+  if (route.params && route.params.deletedBook) {
+    Alert.alert(route.params.deletedBook.name + " named book has been deleted as permenantly");
+    delete route.params.deletedBook;
+    setRefresh(true);
+  }
   const state = useContext(UserContext);
 
   useLayoutEffect(() => {
@@ -80,6 +86,8 @@ const HomeScreen = ({ navigation }) => {
           <ScrollView style={{ marginTop: 20 }}>
             {categories.map(category => (
               <CategoryBookList
+                setRefreshCategories={setRefresh}
+                refreshCategories={refresh}
                 searchLocalValue={localSearchText}
                 searchServerValue={serverSearchText}
                 key={category._id}

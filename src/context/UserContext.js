@@ -10,6 +10,7 @@ export const UserState = ({ children }) => {
     const [userName, setUserName] = useState(null);
     const [email, setEmail] = useState(null);
     const [userRole, setUserRole] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
 
     const login = (email, password) => {
         axios
@@ -31,7 +32,8 @@ export const UserState = ({ children }) => {
             });
     };
 
-    const logout = (userName, userRole, email, token, isLoggedIn) => {
+    const logout = async () => {
+        await AsyncStorage.removeItem('user');
         setEmail(null);
         setIsLoggedIn(false);
         setToken(null);
@@ -70,20 +72,34 @@ export const UserState = ({ children }) => {
         setUserRole(null);
     };
 
-    const loginUserSuccessful = (token, email, userName, userRole) => {
+    const loginUserSuccessful = async (token, email, userName, userRole) => {
         setToken(token);
         setEmail(email);
         setUserName(userName);
         setUserRole(userRole);
+        setIsLoggedIn("true");
 
-        AsyncStorage.setItem('user_token', token)
-            .then(result => {
-                console.log('Login has been done!!!. Token has been stored as successfully');
-                setIsLoggedIn(true);
-            })
-            .catch(err => {
-                console.log("token could not been stored..." + err.message);
-            });
+        // AsyncStorage.setItem('user_token', token)
+        //     .then(result => {
+        //         console.log('Login has been done!!!. Token has been stored as successfully');
+        //         setIsLoggedIn(true);
+        //     })
+        //     .catch(err => {
+        //         console.log("token could not been stored..." + err.message);
+        //     });
+
+        try {
+            await AsyncStorage.setItem(
+                "user",
+                JSON.stringify({ token, userName, userRole, email }),
+                console.log("========+++___+++" + token, userName, userRole, email)
+            );
+        }
+        catch (err) {
+            console.log('Info could not stored on phone storage...')
+        }
+
+
     };
 
     return (
@@ -101,7 +117,9 @@ export const UserState = ({ children }) => {
                 userRole,
                 setUserRole,
                 signUp,
-                logout
+                logout,
+                isLoading,
+                setIsLoading
             }}
         >
             {children}

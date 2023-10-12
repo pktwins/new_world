@@ -19,7 +19,7 @@ const Book = ({ data }) => {
       }
     >
       <Image
-        style={{ width: 200, height: 250, marginRight: 15 }}
+        style={{ width: 211, height: 305, marginRight: 10 }}
         source={{
           uri: "https://m.media-amazon.com/images/I" + data.photo
         }}
