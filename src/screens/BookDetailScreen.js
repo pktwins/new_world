@@ -7,6 +7,7 @@ const BookDetailScreen = (props) => {
   const { id } = props.route.params;
   const [book, error, deleteBook] = useBook(id);
   const userState = useContext(UserContext);
+  console.log('%%%%%%%%%%%%%%%%%', userState.token);
 
   const removeBook = () => {
     Alert.alert(
@@ -24,7 +25,10 @@ const BookDetailScreen = (props) => {
               console.log("Book is removed as successfully.", result.data.data);
               props.navigation.navigate("BookStore", { deletedBook: result.data.data })
             })
-            .catch(err => Alert.alert("Book is not removed from dataBase. ", err.message));
+            .catch(err => {
+              Alert.alert("Book is not removed from dataBase. ", err.response.data.error.message);
+              console.log(err.response.data.error.message);
+            });
         }
       }
       ]);
@@ -55,7 +59,6 @@ const BookDetailScreen = (props) => {
             onPress={removeBook}
           />
         }
-
       </View>
       <View style={{ marginHorizontal: 150, marginBottom: 90, marginTop: 10 }}>
         <Button title="Back"
@@ -68,7 +71,8 @@ const BookDetailScreen = (props) => {
               },
               {
                 text: "Back",
-                onPress: () => props.navigation.goBack()
+                onPress: removeBook
+                // onPress: () => props.navigation.goBack()
               }
             ]);
           }}

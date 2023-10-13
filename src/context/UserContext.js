@@ -34,6 +34,7 @@ export const UserState = ({ children }) => {
 
     const logout = async () => {
         await AsyncStorage.removeItem('user');
+        await axios.get(`http://192.168.1.3:8000/api/v1/users/logout`);
         setEmail(null);
         setIsLoggedIn(false);
         setToken(null);
