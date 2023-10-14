@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
+import UserContext from "../context/UserContext";
 
 export default (id) => {
   const [book, setBook] = useState(null);
   const [error, setError] = useState(null);
+  const state = useContext(UserContext)
 
   const loadBook = async () => {
     try {
@@ -19,7 +21,12 @@ export default (id) => {
 
   const deleteBook = (id) => {
     return axios.delete(
-      `http://192.168.1.3:8000/api/v1/books/${id}`
+      `http://192.168.1.3:8000/api/v1/books/${id}`,
+      {
+        headers:{
+          Authorization:"Bearer "+ state.token
+        }
+      }
     );
   };
 

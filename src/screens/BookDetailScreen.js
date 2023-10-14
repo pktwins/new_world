@@ -7,7 +7,7 @@ const BookDetailScreen = (props) => {
   const { id } = props.route.params;
   const [book, error, deleteBook] = useBook(id);
   const userState = useContext(UserContext);
-  console.log('%%%%%%%%%%%%%%%%%', userState.token);
+  
 
   const removeBook = () => {
     Alert.alert(

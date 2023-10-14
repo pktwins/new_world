@@ -6,6 +6,7 @@ import LoginScreen from "../screens/LoginScreen";
 import UserContext from "../context/UserContext";
 import HomeScreen from "../screens/HomeScreen";
 import SplashScreen from '../screens/SplashScreen';
+import DrawerContent from '../components/DrawerContent';
 
 const Drawer = createDrawerNavigator();
 
@@ -17,7 +18,7 @@ export default () => {
   }
 
   return (
-    <Drawer.Navigator initialRouteName="Book store">
+    <Drawer.Navigator initialRouteName="Book store" drawerContent= {(props)=> <DrawerContent {...props}/>}>
       <Drawer.Screen name="Book Store" component={MyStackNavigator} />
       {state.isLoggedIn ? (
         <>
