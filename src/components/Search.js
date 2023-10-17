@@ -26,19 +26,20 @@ const css = StyleSheet.create({
   searchPanel: {
     top: 15,
     height: 50,
-    backgroundColor: "#b2bec3",
+    backgroundColor: "#BDC3C7",
     marginHorizontal: 15,
+    marginBottom: 2,
     borderRadius: 7,
-    flexDirection: "row"
+    flexDirection: "row",
   },
   searchText: {
-    color: "white",
+    color: "black",
     fontSize: 18,
-    flex: 1
+    flex: 1,
   },
   searchIcon: {
     fontSize: 34,
     alignSelf: "center",
-    marginHorizontal: 15
-  }
+    marginHorizontal: 15,
+  },
 });

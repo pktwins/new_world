@@ -9,7 +9,6 @@ import { SimpleLineIcons } from "@expo/vector-icons";
 
 const DrawerContent = (props) => {
   const state = useContext(UserContext);
-  state.setIsLoggedIn(true);
 
   return (
     <View style={{ flex: 1 }}>
@@ -21,15 +20,18 @@ const DrawerContent = (props) => {
           />
           <View style={{ marginLeft: 10 }}>
             <Title style={{ fontSize: 16, fontWeight: "bold", lineHeight: 25 }}>
-              Batjargal Gochoosuren
+              {state.userName ? state.userName : "New World"}
             </Title>
-            <Caption style={{ lineHeight: 13 }}>Admin</Caption>
+            <Caption style={{ lineHeight: 13 }}>
+              {state.userRole ? state.userRole : "Bookstore"}
+            </Caption>
           </View>
         </View>
         <View style={{ marginHorizontal: 15, marginTop: 20 }}>
           <Drawer.Section>
             <DrawerItem
               label="Book store"
+              onPress={() => props.navigation.navigate("Book Store")}
               icon={() => <Feather name="book-open" size={20} color="black" />}
             />
           </Drawer.Section>
@@ -40,6 +42,7 @@ const DrawerContent = (props) => {
                   <Drawer.Section>
                     <DrawerItem
                       label="Add new book"
+                      onPress={() => props.navigation.navigate("Add new book")}
                       icon={() => (
                         <AntDesign name="addfile" size={20} color="black" />
                       )}
@@ -48,6 +51,7 @@ const DrawerContent = (props) => {
                 )}
                 <DrawerItem
                   label="Logout"
+                  onPress={() => state.logout()}
                   icon={() => (
                     <AntDesign name="logout" size={20} color="black" />
                   )}
@@ -58,6 +62,7 @@ const DrawerContent = (props) => {
                 <Drawer.Section>
                   <DrawerItem
                     label="Registration"
+                    onPress={() => props.navigation.navigate("Registration")}
                     icon={() => (
                       <AntDesign name="setting" size={20} color="black" />
                     )}
@@ -65,6 +70,9 @@ const DrawerContent = (props) => {
                 </Drawer.Section>
                 <DrawerItem
                   label="Login"
+                  onPress={() => {
+                    props.navigation.navigate("Login");
+                  }}
                   icon={() => (
                     <SimpleLineIcons name="login" size={20} color="black" />
                   )}

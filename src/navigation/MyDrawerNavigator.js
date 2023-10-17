@@ -5,8 +5,9 @@ import SignupScreen from "../screens/SignupScreen";
 import LoginScreen from "../screens/LoginScreen";
 import UserContext from "../context/UserContext";
 import HomeScreen from "../screens/HomeScreen";
-import SplashScreen from '../screens/SplashScreen';
-import DrawerContent from '../components/DrawerContent';
+import SplashScreen from "../screens/SplashScreen";
+import DrawerContent from "../components/DrawerContent";
+import BookAdd from "../screens/BookAdd";
 
 const Drawer = createDrawerNavigator();
 
@@ -14,18 +15,27 @@ export default () => {
   const state = useContext(UserContext);
 
   if (state.isLoading === true) {
-    return <SplashScreen />
+    return <SplashScreen />;
   }
 
   return (
-    <Drawer.Navigator initialRouteName="Book store" drawerContent= {(props)=> <DrawerContent {...props}/>}>
+    <Drawer.Navigator
+      initialRouteName="Book store"
+      drawerContent={(props) => <DrawerContent {...props} />}
+    >
       <Drawer.Screen name="Book Store" component={MyStackNavigator} />
       {state.isLoggedIn ? (
         <>
           {state.userRole === "admin" && (
-            <Drawer.Screen name="Add new book" component={MyStackNavigator} />
+            <Drawer.Screen name="Add new book" component={BookAdd} />
           )}
-          <Drawer.Screen name="Logout" component={HomeScreen} listeners={() => { state.logout() }} />
+          <Drawer.Screen
+            name="Logout"
+            component={HomeScreen}
+            listeners={() => {
+              state.logout();
+            }}
+          />
         </>
       ) : (
         <>

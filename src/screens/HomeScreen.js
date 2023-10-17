@@ -5,7 +5,7 @@ import {
   View,
   ScrollView,
   Alert,
-  Button
+  Button,
 } from "react-native";
 
 import {
@@ -13,16 +13,16 @@ import {
   Item,
   HiddenItem,
   OverflowMenu,
-  Divider
-} from 'react-navigation-header-buttons';
-import { Feather } from '@expo/vector-icons';
+  Divider,
+} from "react-navigation-header-buttons";
+import { Feather } from "@expo/vector-icons";
 
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import Search from "../components/Search";
 import useCategory from "../hooks/useCategory";
 import CategoryBookList from "../components/CategoryBookList";
 import Spinner from "../components/Spinner";
-import MyHeaderButton from '../components/MyHeaderButton';
+import MyHeaderButton from "../components/MyHeaderButton";
 import UserContext from "../context/UserContext";
 
 const HomeScreen = ({ navigation, route }) => {
@@ -31,9 +31,11 @@ const HomeScreen = ({ navigation, route }) => {
   const [categories, errorMessage, loading] = useCategory();
   const [refresh, setRefresh] = useState(false);
 
-
   if (route.params && route.params.deletedBook) {
-    Alert.alert(route.params.deletedBook.name + " named book has been deleted as permenantly");
+    Alert.alert(
+      route.params.deletedBook.name +
+        " named book has been deleted as permenantly"
+    );
     delete route.params.deletedBook;
     setRefresh(true);
   }
@@ -50,7 +52,7 @@ const HomeScreen = ({ navigation, route }) => {
       //     />
       //   </HeaderButtons>
       // )
-      title: state.userName ? "Welcome " + state.userName : "New world bookstore"
+      title: state.userName ? "Welcome " + state.userName : "New world",
     });
   }, [navigation, localSearchText, state.userName]);
 
@@ -65,7 +67,7 @@ const HomeScreen = ({ navigation, route }) => {
       style={{
         flex: 1,
         justifyContent: "center",
-        alignItems: "center"
+        alignItems: "center",
       }}
     >
       {loading ? (
@@ -84,7 +86,7 @@ const HomeScreen = ({ navigation, route }) => {
             </Text>
           )}
           <ScrollView style={{ marginTop: 20 }}>
-            {categories.map(category => (
+            {categories.map((category) => (
               <CategoryBookList
                 setRefreshCategories={setRefresh}
                 refreshCategories={refresh}
