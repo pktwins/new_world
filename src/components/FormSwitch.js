@@ -10,6 +10,7 @@ import {
   FadeInLeft,
   FadeInUp,
 } from "react-native-reanimated";
+import { Switch, TouchableRipple } from "react-native-paper";
 
 const FormText = (props) => {
   return (
@@ -27,36 +28,26 @@ const FormText = (props) => {
         }}
       >
         <Feather name={props.icon} size={20} />
-        <TextInput
-          {...props}
+        <View
           style={{
-            paddingLeft: 10,
+            flexDirection: "row",
+            marginLeft: 10,
+            justifyContent: "space-between",
             flex: 1,
-            color: textColor,
-            marginTop: Platform.OS === "ios" ? 0 : -3,
-          }}
-          placeholder={props.placeHolder}
-        />
-        {props.errorShow === false && (
-          <Animatable.View animation="fadeInRight" duration={500}>
-            <Feather name="check-circle" size={14} color={textColor} />
-          </Animatable.View>
-        )}
-      </View>
-      {props.errorShow && (
-        <Animatable.Text
-          animation="fadeInLeft"
-          duration={500}
-          style={{
-            color: "#1abc9c",
-            marginTop: 5,
-            paddingLeft: 30,
-            fontSize: 15,
           }}
         >
-          {props.errorText}
-        </Animatable.Text>
-      )}
+          <TouchableRipple onPress={props.onChangeValue}>
+            <Text style={{ color: textColor, marginTop: 7 }}>
+              {props.value}
+            </Text>
+          </TouchableRipple>
+
+          <Switch
+            value={props.value === props.data[0] ? true : false}
+            onValueChange={props.onChangeValue}
+          />
+        </View>
+      </View>
     </View>
   );
 };
