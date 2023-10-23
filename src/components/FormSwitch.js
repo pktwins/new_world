@@ -38,14 +38,11 @@ const FormText = (props) => {
         >
           <TouchableRipple onPress={props.onChangeValue}>
             <Text style={{ color: textColor, marginTop: 7 }}>
-              {props.value}
+              {props.value ? props.data[0] : props.data[1]}
             </Text>
           </TouchableRipple>
 
-          <Switch
-            value={props.value === props.data[0] ? true : false}
-            onValueChange={props.onChangeValue}
-          />
+          <Switch value={props.value} onValueChange={props.onChangeValue} />
         </View>
       </View>
     </View>

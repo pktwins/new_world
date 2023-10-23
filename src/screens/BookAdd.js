@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   StyleSheet,
@@ -6,24 +6,56 @@ import {
   StatusBar,
   SafeAreaView,
   ScrollView,
+  Alert,
 } from "react-native";
-import { mainColor, lightColor, textColor } from "../Constant";
+import { mainColor, lightColor, textColor, restApiUrl } from "../Constant";
 import FormText from "../components/FormText";
 import * as Animatable from "react-native-animatable";
 import FormSwitch from "../components/FormSwitch";
 import FormPicker from "../components/FormPicker";
 import useCategory from "../hooks/useCategory";
 import Spinner from "../components/Spinner";
+import MyButton from "../components/MyButton";
+import axios from "axios";
 
-const BookAdd = () => {
+const BookAdd = (props) => {
+  const sendBookToServer = () => {
+    if (book.category !== "null") {
+      setSavingToServer(true);
+      axios
+        .post(`${restApiUrl}/api/v1/books/`, book)
+        .then((result) => {
+          // setSavingToServer(false);
+          const newBook = result.data.data;
+          props.navigation.navigate("Detail", { id: newBook.id });
+        })
+        .catch((serverError) => {
+          // setSavingToServer(false);
+          if (serverError.response)
+            setServerError(serverError.response.data.error.message);
+          else setServerError(serverError.response);
+        })
+        .finally(() => {
+          setSavingToServer(false);
+        });
+    } else {
+      Alert.alert("Please choose category");
+    }
+  };
+  const [savingToServer, setSavingToServer] = useState(false);
+  const [serverError, setServerError] = useState(null);
   const [categories, errorMessage, loading] = useCategory();
   const [book, setBook] = useState({
     name: "",
-    content: "",
-    price: "",
-    author: "",
-    bestseller: "This book is not bestseller",
-    category: "literature",
+    photo: "photo.jpg",
+    content: "Superior detailed programming book which has real project steps",
+    rating: 4.0,
+    balance: 7,
+    price: "30",
+    author: "Batjargal Gochoosuren",
+    bestseller: true,
+    available: ["new", "old"],
+    category: "null",
   });
   const [error, setError] = useState({
     name: false,
@@ -35,10 +67,7 @@ const BookAdd = () => {
   const toggleBestSeller = () => {
     setBook({
       ...book,
-      bestseller:
-        book.bestseller === "This book is bestseller"
-          ? "This book is not bestseller"
-          : "This book is bestseller",
+      bestseller: !book.bestseller,
     });
   };
   const checkName = (text) => {
@@ -119,12 +148,17 @@ const BookAdd = () => {
           borderTopRightRadius: 50,
         }}
       >
-        {loading ? (
+        {loading || savingToServer ? (
           <Spinner />
         ) : (
-          <ScrollView
-          // showsVerticalScrollIndicator="false"
-          >
+          <ScrollView>
+            {serverError &&
+              Alert.alert("Attention", serverError, [
+                {
+                  text: "ok",
+                  onPress: setServerError(null),
+                },
+              ])}
             <FormText
               label="Enter book title"
               placeHolder="title of book"
@@ -171,6 +205,7 @@ const BookAdd = () => {
               onChangeValue={toggleBestSeller}
               data={["This book is bestseller", "This book is not bestseller"]}
             />
+
             <FormPicker
               label="Choose category:"
               icon="layers"
@@ -182,6 +217,15 @@ const BookAdd = () => {
               }}
               selectedValue={book.category}
             />
+            <View
+              style={{ flexDirection: "row", justifyContent: "space-evenly" }}
+            >
+              <MyButton
+                title="Back"
+                onPress={() => props.navigation.goBack()}
+              />
+              <MyButton title="send to Server" onPress={sendBookToServer} />
+            </View>
           </ScrollView>
         )}
       </Animatable.View>
