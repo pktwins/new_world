@@ -41,7 +41,8 @@
     "react-native-web": "^0.19.9",
     "react-navigation": "^5.0.0",
     "react-navigation-header-buttons": "^11.0.1",
-    "thousandify": "^1.0.3"
+    "thousandify": "^1.0.3",
+    "expo-image-picker": "~14.3.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

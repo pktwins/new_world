@@ -10,6 +10,7 @@ import {
 import React, { useContext } from "react";
 import useBook from "../hooks/useBook";
 import UserContext from "../context/UserContext";
+import { restApiUrl } from "../Constant";
 
 const BookDetailScreen = (props) => {
   const { id } = props.route.params;
@@ -52,12 +53,20 @@ const BookDetailScreen = (props) => {
   if (!book) {
     return null;
   }
+
   return (
     <ScrollView showsVerticalScrollIndicator={false} style={{ padding: 20 }}>
-      <Image
-        style={{ width: 350, height: 530, alignSelf: "center", marginTop: 2 }}
-        source={{ uri: "https://m.media-amazon.com/images/I" + book.photo }}
-      />
+      {book.photo.startsWith("/") ? (
+        <Image
+          style={{ width: 350, height: 530, alignSelf: "center", marginTop: 2 }}
+          source={{ uri: "https://m.media-amazon.com/images/I" + book.photo }}
+        />
+      ) : (
+        <Image
+          style={{ width: 350, height: 530, alignSelf: "center", marginTop: 2 }}
+          source={{ uri: restApiUrl + "/upload/" + book.photo }}
+        />
+      )}
       <Text
         style={{
           fontSize: 18,

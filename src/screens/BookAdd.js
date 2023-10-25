@@ -7,6 +7,8 @@ import {
   SafeAreaView,
   ScrollView,
   Alert,
+  Button,
+  Image,
 } from "react-native";
 import { mainColor, lightColor, textColor, restApiUrl } from "../Constant";
 import FormText from "../components/FormText";
@@ -17,17 +19,51 @@ import useCategory from "../hooks/useCategory";
 import Spinner from "../components/Spinner";
 import MyButton from "../components/MyButton";
 import axios from "axios";
+import * as ImagePicker from "expo-image-picker";
 
 const BookAdd = (props) => {
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.canceled) {
+      setBook({ ...book, photo: result.assets[0].uri });
+    }
+  };
+
   const sendBookToServer = () => {
     if (book.category !== "null") {
       setSavingToServer(true);
+
+      const fileURI = book.photo;
+      const fileExt = fileURI.substring(fileURI.lastIndexOf(".") + 1);
+      book.photo = `photo_${new Date().getTime()}.${fileExt}`;
+
       axios
         .post(`${restApiUrl}/api/v1/books/`, book)
         .then((result) => {
-          // setSavingToServer(false);
+          setSavingToServer(false);
           const newBook = result.data.data;
-          props.navigation.navigate("Detail", { id: newBook.id });
+          const xhr = new XMLHttpRequest();
+          const data = new FormData();
+
+          data.append("file", {
+            uri: fileURI,
+            type: `image/${fileExt}`,
+            name: book.photo,
+          });
+          xhr.open(
+            "PUT",
+            `${restApiUrl}/api/v1/books/${newBook._id}/upload-photo`
+          );
+          xhr.send(data);
+          props.navigation.navigate("Detail", { id: newBook._id });
         })
         .catch((serverError) => {
           // setSavingToServer(false);
@@ -47,7 +83,7 @@ const BookAdd = (props) => {
   const [categories, errorMessage, loading] = useCategory();
   const [book, setBook] = useState({
     name: "",
-    photo: "photo.jpg",
+    photo: "",
     content: "Superior detailed programming book which has real project steps",
     rating: 4.0,
     balance: 7,
@@ -159,6 +195,22 @@ const BookAdd = (props) => {
                   onPress: setServerError(null),
                 },
               ])}
+
+            <View
+              style={{
+                flex: 1,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Button title="Choose photo" onPress={pickImage} />
+              {book.photo && (
+                <Image
+                  source={{ uri: book.photo }}
+                  style={{ width: 100, height: 100 }}
+                />
+              )}
+            </View>
             <FormText
               label="Enter book title"
               placeHolder="title of book"

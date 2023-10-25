@@ -11,6 +11,7 @@ export default (id) => {
   const loadBook = async () => {
     try {
       const result = await axios.get(`${restApiUrl}/api/v1/books/${id}`);
+
       setBook(result.data.data);
       setError(null);
     } catch (err) {

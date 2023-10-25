@@ -2,7 +2,8 @@ import React from "react";
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 const thousandify = require("thousandify");
 import { useNavigation } from "@react-navigation/native";
-import Detail from '../screens/BookDetailScreen';
+import Detail from "../screens/BookDetailScreen";
+import { restApiUrl } from "../Constant";
 
 const Book = ({ data }) => {
   const navigation = useNavigation();
@@ -14,21 +15,25 @@ const Book = ({ data }) => {
       style={{
         marginLeft: 15,
         marginVertical: 15,
-        width: 200
-      }
-      }
+        width: 200,
+      }}
     >
-      <Image
-        style={{ width: 211, height: 305, marginRight: 10 }}
-        source={{
-          uri: "https://m.media-amazon.com/images/I" + data.photo
-        }}
-      />
+      {data.photo.startsWith("/") ? (
+        <Image
+          style={{ width: 211, height: 305, alignSelf: "center", marginTop: 2 }}
+          source={{ uri: "https://m.media-amazon.com/images/I" + data.photo }}
+        />
+      ) : (
+        <Image
+          style={{ width: 211, height: 305, alignSelf: "center", marginTop: 2 }}
+          source={{ uri: restApiUrl + "/upload/" + data.photo }}
+        />
+      )}
       <Text
         style={{
           marginLeft: 10,
           fontSize: 12,
-          marginTop: 10
+          marginTop: 10,
         }}
       >
         {data.name}
@@ -44,7 +49,7 @@ const Book = ({ data }) => {
           justifyContent: "space-between",
           paddingHorizontal: 10,
           marginTop: 10,
-          alignItems: "center"
+          alignItems: "center",
         }}
       >
         <Text style={{ marginRight: 10, fontSize: 18, fontWeight: "bold" }}>
@@ -55,7 +60,7 @@ const Book = ({ data }) => {
           {data.balance > 0 ? `${data.balance} pcs` : null}
         </Text>
       </View>
-    </TouchableOpacity >
+    </TouchableOpacity>
   );
 };
 
