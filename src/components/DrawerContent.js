@@ -49,6 +49,16 @@ const DrawerContent = (props) => {
                     />
                   </Drawer.Section>
                 )}
+                <Drawer.Section>
+                  <DrawerItem
+                    label="Settings"
+                    onPress={() => props.navigation.navigate("Settings")}
+                    icon={() => (
+                      <AntDesign name="setting" size={20} color="black" />
+                    )}
+                  />
+                </Drawer.Section>
+
                 <DrawerItem
                   label="Logout"
                   onPress={() => state.logout()}
@@ -68,6 +78,7 @@ const DrawerContent = (props) => {
                     )}
                   />
                 </Drawer.Section>
+
                 <DrawerItem
                   label="Login"
                   onPress={() => {

@@ -26,7 +26,7 @@ const BookAdd = (props) => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
-      aspect: [4, 3],
+      aspect: [3, 4],
       quality: 1,
     });
 
@@ -36,7 +36,44 @@ const BookAdd = (props) => {
       setBook({ ...book, photo: result.assets[0].uri });
     }
   };
+  const [uploadTotal, setUploadTotal] = useState(0);
+  const [uploadProgress, setUploadProgress] = useState();
+  const [savingToServer, setSavingToServer] = useState(false);
+  const [serverError, setServerError] = useState(null);
+  const [categories, errorMessage, loading] = useCategory();
+  const [book, setBook] = useState({
+    name: "",
+    photo: "",
+    content: "",
+    rating: 4.0,
+    balance: 7,
+    price: "",
+    author: "",
+    bestseller: true,
+    available: ["new", "old"],
+    category: "null",
+  });
+  const [error, setError] = useState({
+    name: false,
+    content: false,
+    price: false,
+    author: false,
+  });
+  const handleUploadComplete = (event, bookID) => {
+    console.log("Upload has been completed");
+    setUploadProgress(0);
+    setUploadTotal(0);
+    props.navigation.navigate("Detail", { id: bookID });
+  };
+  const handleUploadProgress = (event) => {
+    if (uploadTotal === 0) setUploadTotal(event.total);
 
+    setUploadProgress((uploadProgress) => {
+      console.log("Uploadable total", uploadTotal);
+      console.log("Uploading progress", uploadProgress);
+      return Math.round((event.loaded * 100) / event.total);
+    });
+  };
   const sendBookToServer = () => {
     if (book.category !== "null") {
       setSavingToServer(true);
@@ -51,6 +88,10 @@ const BookAdd = (props) => {
           setSavingToServer(false);
           const newBook = result.data.data;
           const xhr = new XMLHttpRequest();
+          xhr.addEventListener("load", (event) =>
+            handleUploadComplete(event, newBook._id)
+          );
+          xhr.upload.addEventListener("progress", handleUploadProgress);
           const data = new FormData();
 
           data.append("file", {
@@ -63,7 +104,6 @@ const BookAdd = (props) => {
             `${restApiUrl}/api/v1/books/${newBook._id}/upload-photo`
           );
           xhr.send(data);
-          props.navigation.navigate("Detail", { id: newBook._id });
         })
         .catch((serverError) => {
           // setSavingToServer(false);
@@ -78,28 +118,6 @@ const BookAdd = (props) => {
       Alert.alert("Please choose category");
     }
   };
-  const [savingToServer, setSavingToServer] = useState(false);
-  const [serverError, setServerError] = useState(null);
-  const [categories, errorMessage, loading] = useCategory();
-  const [book, setBook] = useState({
-    name: "",
-    photo: "",
-    content: "Superior detailed programming book which has real project steps",
-    rating: 4.0,
-    balance: 7,
-    price: "30",
-    author: "Batjargal Gochoosuren",
-    bestseller: true,
-    available: ["new", "old"],
-    category: "null",
-  });
-  const [error, setError] = useState({
-    name: false,
-    content: false,
-    price: false,
-    author: false,
-  });
-
   const toggleBestSeller = () => {
     setBook({
       ...book,
@@ -154,6 +172,36 @@ const BookAdd = (props) => {
       content: text,
     });
   };
+  if (uploadTotal > 0) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Text
+          style={{
+            marginBottom: 20,
+            fontSize: 20,
+            marginLeft: 50,
+            marginRight: 50,
+          }}
+        >
+          책 이미지를 서버로 업로드 중, 잠시만 기다려 주세요
+        </Text>
+        <View style={{ height: 30, backgroundColor: "#d63031", width: 100 }}>
+          <View
+            style={{
+              height: 30,
+              backgroundColor: "#00b894",
+              width: uploadProgress,
+              alignItems: "center",
+            }}
+          >
+            <Text style={{ color: "white", marginTop: 6 }}>
+              {uploadProgress}%
+            </Text>
+          </View>
+        </View>
+      </View>
+    );
+  }
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: mainColor }}>
       <StatusBar backgroundColor={mainColor} barStyle="light-content" />
