@@ -13,12 +13,13 @@ import * as Animatable from "react-native-animatable";
 import FormSwitch from "../components/FormSwitch";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Notifications from "expo-notifications";
-import * as Permissions from "expo-permissions";
+// import * as Permissions from "expo-permissions";
+import { expo } from "../../app.json";
 
 const SettingsScreen = (props) => {
   const [alarm, setAlarm] = useState(false);
   const [notificationID, setNotificationID] = useState(null);
-
+  const projectId = expo.projectId;
   Notifications.setNotificationHandler({
     handleNotification: async () => ({
       shouldShowAlert: true,
@@ -46,15 +47,43 @@ const SettingsScreen = (props) => {
         ])
       );
 
-    Permissions.getAsync(Permissions.NOTIFICATIONS)
+    // Permissions.getAsync(Permissions.NOTIFICATIONS)
+    //   .then((result) => {
+    //     if (result.status !== "granted") {
+    //       Permissions.askAsync(Permissions.NOTIFICATIONS)
+    //         .then((result) => console.log("+++", result))
+    //         .catch((err) => console.log(err));
+    //     }
+    //   })
+    //   .catch((error) => console.log(error));
+
+    // Permissions.getAsync(Permissions.NOTIFICATIONS)
+    //   .then((result) => {
+    //     if (result.status !== "granted") {
+    //       return Permissions.askAsync(Permissions.NOTIFICATIONS);
+    //     }
+    //     return result;
+    //   })
+    //   .then((result) => {
+    //     console.log(result);
+    //     if (result.status === "granted") {
+    //       Notifications.getExpoPushTokenAsync({
+    //         projectId: "84601102-a982-4b04-a876-e637140c2839",
+    //       }).then((result) => console.log("Expo result: ", result));
+    //     }
+    //   })
+    //   .catch((err) => console.log(err));
+
+    Notifications.requestPermissionsAsync()
       .then((result) => {
-        if (result.status !== "granted") {
-          Permissions.askAsync(Permissions.NOTIFICATIONS)
-            .then((result) => console.log("+++", result))
-            .catch((err) => console.log(err));
+        console.log(result);
+        if (result.status === "granted") {
+          Notifications.getExpoPushTokenAsync({
+            projectId: "84601102-a982-4b04-a876-e637140c2839",
+          }).then((result) => console.log("Expo result: ", result));
         }
       })
-      .catch((error) => console.log(error));
+      .catch((err) => console.log(err));
 
     AsyncStorage.getItem("notification_id")
       .then((result) => {
@@ -81,6 +110,34 @@ const SettingsScreen = (props) => {
       console.log("전에", alarm);
       const newValue = !alarm;
       console.log("후에", newValue);
+      // if (newValue) {
+      //   Notifications.scheduleNotificationAsync({
+      //     content: {
+      //       title: "book SALE!",
+      //       body: "어떤 책이 세일되었는지 서둘러 확인하세요!",
+      //       data: {
+      //         id: "653f47b15a9d192d6a5c4e58",
+      //         message: "60초마다 50% 힐인받을 수 있게 됐다!!!",
+      //       },
+      //     },
+      //     trigger: {
+      //       seconds: 5,
+      //     },
+      //   })
+      //     .then((id) => {
+      //       setNotificationID(id);
+      //       console.log("sale will be informed as this ID", id);
+      //       AsyncStorage.setItem("notification_id", id);
+      //     })
+      //     .catch((err) => console.log(err));
+      // } else {
+      //   Notifications.cancelScheduledNotificationAsync(notificationID)
+      //     .then((result) => {
+      //       AsyncStorage.removeItem("notification_id)");
+      //       console.log("notification removed from AsyncStorage");
+      //     })
+      //     .catch((error) => console.log(error));
+      // }
       if (newValue) {
         Notifications.scheduleNotificationAsync({
           content: {
@@ -104,7 +161,7 @@ const SettingsScreen = (props) => {
       } else {
         Notifications.cancelScheduledNotificationAsync(notificationID)
           .then((result) => {
-            AsyncStorage.removeItem("notification_id)");
+            AsyncStorage.removeItem("notification_id");
             console.log("notification removed from AsyncStorage");
           })
           .catch((error) => console.log(error));
