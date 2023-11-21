@@ -8,6 +8,7 @@ import HomeScreen from "../screens/HomeScreen";
 import SplashScreen from "../screens/SplashScreen";
 import DrawerContent from "../components/DrawerContent";
 import BookAdd from "../screens/BookAdd";
+import SettingsScreen from "../screens/SettingsScreen";
 
 const Drawer = createDrawerNavigator();
 
@@ -29,6 +30,7 @@ export default () => {
           {state.userRole === "admin" && (
             <Drawer.Screen name="Add new book" component={BookAdd} />
           )}
+          <Drawer.Screen name="Settings" component={SettingsScreen} />
           <Drawer.Screen
             name="Logout"
             component={HomeScreen}
